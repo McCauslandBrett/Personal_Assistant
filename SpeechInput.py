@@ -5,6 +5,10 @@ Created on Sat Jun  1 15:06:58 2019
 Resources: https://youtu.be/K_WbsFrPUCk
            https://youtu.be/LFXsG7fueyk
            
+           Bird, Steven, Edward Loper and Ewan Klein (2009),
+           Natural Language Processing with Python. 
+           O’Reilly Media Inc.
+           
 @author: brett
 """
 
