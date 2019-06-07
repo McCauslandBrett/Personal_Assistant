@@ -32,14 +32,14 @@ from nltk.chunk import conlltags2tree, tree2conlltags
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 from nltk.chunk import ne_chunk
-
+alarmcnt = 0
 # Globels
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
 volume = engine.getProperty('volume')
-engine.setProperty('volume', 10.0)
+engine.setProperty('volume', 0.9)  
 rate = engine.getProperty('rate')
 engine.setProperty('rate', rate - 100)
 now = datetime.datetime.now()
@@ -124,11 +124,19 @@ def actionExtraction(sent):
 
 #def exportReminder(lst):
    
-
+def testingResp():
+    action = ('remind', 'appointment')
+    dct = {}
+    dct['CARDINAL'] ='5'
+    Response(action,dct)
+    
 
 def Response(action, dct):
     
-    engine.runAndWait()
+    respe= 'say this'
+    engine.say('testing testing')
+    engine.say(respe)
+    resp=''
     if action[1] == 'alarm':
         resp = 'Okay I will set a alarm for you'
         if 'DATE' in dct:
@@ -137,9 +145,9 @@ def Response(action, dct):
                 resp += 'at' + dct['CARDINAL']
         elif 'CARDINAL' in dct:
                 resp += 'for' + dct['CARDINAL']
-        engine.say(resp)
-        
-    elif action[1] == 'remind' or action[1] == 'set':
+                
+            
+    elif action[1] == 'remind' or action[1] == 'set'or action[1] == 'make':
         first = False
         if action[1] == 'set':
             resp = 'Okay I will set a '
@@ -163,37 +171,152 @@ def Response(action, dct):
         if 'GPE' in dct:
             resp += 'at ' + dct['GPE']
         print('speak')
-        engine.say(resp)
+    #engine.runAndWait()
+    engine.say(resp)
+    #engine.stop()
         
-        
-        
-        #more specific based on VB
-  
+def Response2(action, dct):
+    
+    #respe= 'say this'
+    
+    #engine.say('testing testing')
+    #engine.runAndWait()
+    #engine.runAndWait()
+    #engine.say(respe)
+    resp=''
+    if action[1] == 'alarm':
+        engine.say('Okay I will set a alarm for you')
+        engine.runAndWait()
+        if 'DATE' in dct:
+             s = 'for ' + dct['DATE']
+             engine.say(s)
+             engine.runAndWait()
+             
+             #engine.runAndWait()
+            
+             if 'CARDINAL' in dct:
+                s ='at' + dct['CARDINAL']
+                engine.say(s)
+                engine.runAndWait()
+                #engine.runAndWait()
+                
+        elif 'CARDINAL' in dct:
+                s = 'for' + dct['CARDINAL']
+                engine.say(s)
+                engine.runAndWait()
+                #engine.runAndWait()
+            
+    elif action[1] == 'remind' or action[1] == 'set'or action[1] == 'make':
+        first = False
+        if action[1] == 'set':
+            s = 'Okay I will set a '
+            engine.say(s)
+            engine.runAndWait()
+            if action[0] =='appointment':
+                s = action[0]
+                engine.say(s)
+                engine.runAndWait()
+            first = True
+        else:
+             s = 'Okay I will set a reminder '
+             engine.say(s)
+             engine.runAndWait()
+        if action[0] != None:
+            s = 'for ' + action[0]
+            engine.say(s)
+            engine.runAndWait()
+            first = True
+        if 'DATE' in dct:
+            if first:
+                s = 'for ' + dct['DATE']
+                engine.say(s)
+                engine.runAndWait()
+            else:
+                s = 'at ' + dct['DATE']
+                engine.say(s)
+                engine.runAndWait()
+        if 'CARDINAL' in dct:
+            s = 'at ' + dct['CARDINAL']
+            engine.say(s)
+            engine.runAndWait()
+        if 'PERSON' in dct:
+            s = 'with ' + dct['PERSON']
+            engine.say(s)
+            engine.runAndWait()
+        if 'GPE' in dct:
+            s = 'at ' + dct['GPE']
+            engine.say(s)
+            engine.runAndWait()
 
+def save_to_file(action, dct):
+  
+    if action[1] == 'alarm':
+        f = open("alarm", "a")
+        f.write('Alarm:' + '\n')
+        if 'CARDINAL' in dct:
+            f.write('CARDINAL: ' +  dct['CARDINAL']+ "\n")
+        if 'DATE' in dct:
+            f.write('DATE: ' + dct['DATE']+ "\n") 
+        f.write("\n")
+        f.close()
+    # time, date , who | org, 
+    elif action[0]=='remind':
+          f = open("remind", "a")
+          f.write('Reminder:'+ "\n")
+          f.write('CARDINAL: ')
+          if 'CARDINAL' in dct:
+              f.write('CARDINAL: ' + dct['CARDINAL']+ "\n")
+          if 'DATE' in dct:
+            f.write('DATE: '+dct['DATE']+ "\n")
+          if 'PERSON' in dct:
+            f.write('PERSON: ' + dct['PERSON']+ "\n")
+          if 'ORG' in dct:
+            f.write('ORG: '+dct['ORG']+ "\n")
+          if 'GPE' in dct:
+            f.write('GPE: '+dct['GPE']+ "\n")
+          f.write("\n")
+          f.close() 
+        # time, date , who | org, 
+    elif action[1]=='appointment':
+          f = open("appointment", "a")
+          f.write('Appointment:'+ "\n")
+          if 'CARDINAL' in dct:
+              f.write('CARDINAL: ' + dct['CARDINAL']+ "\n")
+          if 'DATE' in dct:
+            f.write('DATE: '+dct['DATE']+ "\n")
+          if 'PERSON' in dct:
+            f.write('PERSON: ' + dct['PERSON']+ "\n")
+          if 'ORG' in dct:
+            f.write('ORG: '+dct['ORG']+ "\n")
+          if 'GPE' in dct:
+            f.write('GPE: '+dct['GPE']+ "\n")
+          f.write("\n")
+          f.close() 
+       
 # --- Main ---
 def main():
 
  run = True
  text=""
+ #engine.runAndWait()
  while(run):
     with sr.Microphone() as source:
-    #audio_activate = r.listen_in_background(source)
-        print('speak Anything: ')
+        engine.say('Go ahead Im listning ')
+        print("say anything")
         audio = r.listen(source)
-
-    #audio = r.listen_in_background(source)
         try:
             text = r.recognize_google(audio)
             print(text)
         except:
             print('Sorry I didnt Catch that')
+            engine.say('Sorry I didnt catch that')
             continue
     #--- nltk implementation ---
         #print('You said : {}'.format(text))
         #words = nltk.word_tokenize(text)
         #tagged = nltk.pos_tag(words)
         #namedEnt = nltk.ne_chunk(tagged)
-        #-------------------------------
+    #-------------------------------
             
         #--- spacy implementation ---
         sent = preprocess(text)
@@ -202,24 +325,16 @@ def main():
         print('result',result)
         action = actionExtraction(sent)
         print('actionExtraction: ',action)
-       
-        cs = cp.parse(sent)
-        iob_tagged = tree2conlltags(cs)
-        #pprint(iob_tagged)
-        
-        
-
         doc = nlp(text)
         pprint([(X.text, X.label_) for X in doc.ents])
         dct = entityExtraction(doc)
-        Response(action, dct)
+        #Response2(action, dct)
+        save_to_file(action, dct)
         dct.clear()
         text = ''
-        #actionExtraction(doc)
-        #print(lst)
     run = False
 
-
+engine.stop()
 
 
 
@@ -228,6 +343,15 @@ def main():
 
 
 if __name__ == '__main__' :
-   main()
+  main()
+#testingResp()
+#engine.runAndWait()
+#resp=''
+
+
+
+
+
+
 
 
