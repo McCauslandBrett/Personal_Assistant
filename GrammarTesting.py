@@ -25,7 +25,7 @@ from nltk.corpus import treebank
 #nltk.download('words')
 r = sr.Recognizer()
 r.energy_threshold = 4000
-text="remind me to take my medicine at 12"
+text="pick up Asprin from CSV Pharmacy on Tuesday May 12th"
 
 words = nltk.word_tokenize(text)
 tagged = nltk.pos_tag(words)
@@ -47,7 +47,7 @@ groucho_grammar = nltk.CFG.fromstring("""
  
  
  
-sent = ['I', 'shot', 'an', 'elephant', 'in', 'my', 'pajamas']
+#sent = ['I', 'shot', 'an', 'elephant', 'in', 'my', 'pajamas']
 try:
     parser = nltk.ChartParser(groucho_grammar)
     for tree in parser.parse(sent):
