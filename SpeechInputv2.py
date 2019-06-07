@@ -11,7 +11,8 @@ from spacy import displacy
 from collections import Counter
 import speech_recognition as sr
 import copy
-
+#import en_core_web_sm
+#nlp = en_core_web_sm.load()
 
 sentence = ""
 
@@ -61,8 +62,8 @@ result = NPChunker.parse(sent)
 iob_tagged = tree2conlltags(cs)
 pprint(iob_tagged)
 
-nlp = spacy.load("en_core_web_sm")
-#nlp = en_core_web_sm.load()
+#nlp = spacy.load("en_core_web_sm")
+nlp = en_core_web_sm.load()
 
 doc = nlp(speech)
 pprint([(X.text, X.label_) for X in doc.ents])
