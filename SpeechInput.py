@@ -17,6 +17,33 @@ import nltk
 #nltk.download()
 #nltk.download('averaged_perceptron_tagger')
 #nltk.download('words')
+
+def Reminder(named_ents,_return):
+    
+    engine.runAndWait()
+    found = False
+    time= None
+    day = None
+    for tup in named_ents:
+        if tup[0] == 'remind' or tup[0]== 'remember':
+            named_ents.remove(tup)
+            found == True
+        if tup[1]=='CD':
+            time = tup[0]
+        if tup[0] == 'tomorrow':
+            day = tup[0]
+        
+    if found:
+        engine.say('Okay I will set a reminder for you')
+    return _return 
+        
+
+
+
+
+
+
+
 r = sr.Recognizer()
 r.energy_threshold = 4000
 text=""
