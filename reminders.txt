@@ -1,3 +1,1 @@
 Reminder:
-on date:	tomorrow
-with:	John

@@ -1,6 +1,6 @@
 #sources: https://towardsdatascience.com/named-entity-recognition-with-nltk-and-spacy-8c4a7d88e7da
 
-import nltk
+import nltk #
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 from nltk.chunk import ne_chunk
@@ -46,7 +46,7 @@ def preprocess(sent):
 
 sent = preprocess(ex)
 
-
+#
 pattern = 'NP: {<DT>?<JJ>*<NN>}'
 
 cp = nltk.RegexpParser(pattern)
