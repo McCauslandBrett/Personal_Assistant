@@ -41,7 +41,10 @@ namedEnt.draw()
 
 def make_appointment():
     return 0
+file = open("reminders.txt", "w")
 
+file.write("Reminder:\n")
+file.write("Date:\t" + "\n")
 file.write("Time:\t" + "\n")
 file.write("Location:\t" + "\n")
 file.write("With:\t" + "\n")

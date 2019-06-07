@@ -1,6 +1,3 @@
 Reminder:
-Date:	
-Time:	
-Location:	
-With:	
-
+on date:	tomorrow
+with:	John

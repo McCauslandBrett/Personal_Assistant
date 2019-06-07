@@ -51,7 +51,7 @@ pattern = 'NP: {<DT>?<JJ>*<NN>}'
 
 cp = nltk.RegexpParser(pattern)
 cs = cp.parse(sent)
-print(cs)
+#print(cs)
 
 NPChunker = nltk.RegexpParser(pattern)
 result = NPChunker.parse(sent)
@@ -59,7 +59,7 @@ result = NPChunker.parse(sent)
 
 
 iob_tagged = tree2conlltags(cs)
-pprint(iob_tagged)
+#pprint(iob_tagged)
 
 nlp = spacy.load("en_core_web_sm")
 #nlp = en_core_web_sm.load()
@@ -67,4 +67,38 @@ nlp = spacy.load("en_core_web_sm")
 doc = nlp(speech)
 pprint([(X.text, X.label_) for X in doc.ents])
 
+date = None
+person = None
+place = None
+org = None
+time= None
 
+for X in doc.ents:
+    print(X.label_)
+    if X.label == 'ORG':
+        org = X.text
+    elif X.label_ == 'GPE':
+        place = X.text
+    elif X.label_ == 'DATE':
+        date = X.text
+    elif X.label_ == 'PERSON':
+        person = X.text
+    elif X.label_ == 'CARDINAL':
+        time = X.text
+
+
+
+
+file = open("reminders.txt", "w")
+file.write("Reminder:\n")
+if(date):
+    file.write("on date:\t" + date + "\n")
+if(time):
+    file.write("at time:\t" + time + "\n")
+if (place):
+    file.write("in:\t" + place + "\n")
+if(org):
+    file.write("at:\t" + org + "\n")
+if(person):
+    file.write("with:\t" + person + "\n")
+file.close()
