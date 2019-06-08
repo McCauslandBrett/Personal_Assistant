@@ -124,7 +124,8 @@ def entityExtraction(doc):
     
     dct ={}
     for x in doc.ents:
-        if x.label == 'ORG':
+        print(x)
+        if x.label_ == 'ORG':
             dct['ORG'] =  x.text
         elif x.label_ == 'GPE':
             dct['GPE'] =  x.text
@@ -134,18 +135,17 @@ def entityExtraction(doc):
             dct['PERSON'] =  x.text
         elif x.label_ == 'CARDINAL':
             dct['CARDINAL'] = x.text
+    print('dictionary: ',dct)
     return dct
 def actionExtraction(sent):
     
     #VB NN 
     tm = Grm()
-    verb = None
-    Noun = None
     for x in sent:
-        if  x[1] =='VB'  and verb == None: # havent already selected a verb
+        if  x[1] =='VB'  and tm.VB == None: # havent already selected a verb
             if x[0] in verb_terminals: 
                 tm.VB = x[0]
-        if x[1] == 'NN' and Noun == None and verb != None:
+        if x[1] == 'NN' and tm.NN == None and tm.VB  != None:
            tm.NN = x[0]
     return(tm)
 
@@ -234,7 +234,6 @@ def save_to_file(ST, dct):
               ST.VB not in verb_terminals_schedule)):
           f = open("remind", "a")
           f.write('Reminder:'+ "\n")
-          f.write('CARDINAL: ')
           if 'CARDINAL' in dct:
               f.write('CARDINAL: ' + dct['CARDINAL']+ "\n")
           if 'DATE' in dct:
@@ -242,16 +241,15 @@ def save_to_file(ST, dct):
           if 'PERSON' in dct:
             f.write('PERSON: ' + dct['PERSON']+ "\n")
           if 'ORG' in dct:
-            f.write('ORG: '+dct['ORG']+ "\n")
+            f.write('ORG: ' + dct['ORG'] + "\n")
           if 'GPE' in dct:
-            f.write('GPE: '+dct['GPE']+ "\n")
+            f.write('GPE: '+ dct['GPE'] + "\n")
           f.write("\n")
           f.close() 
         # time, date , who | org, 
     elif (ST.NN in noun_terminals_schedule 
           or (ST.VB in verb_terminals_schedule and 
               ST.VB not in verb_terminals_reminder)):
-          print('hello from appointment scheduler')
           f = open("appointment", "a")
           f.write('Appointment:'+ "\n")
           if 'CARDINAL' in dct:
@@ -298,6 +296,8 @@ def main():
         result = NPChunker.parse(sent)
         print('result',result)
         ST = actionExtraction(sent)
+        print('VB: ', ST.VB)
+        print('NN: ', ST.NN)
         #print('actionExtraction: ',ST)
         doc = nlp(text)
         pprint([(X.text, X.label_) for X in doc.ents])
