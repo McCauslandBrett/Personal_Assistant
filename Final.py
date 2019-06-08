@@ -61,8 +61,8 @@ noun_terminals_schedule = ['appointment','meeting','schedule']
 
 
 verb_terminals = ['set','make','remind','schedule'] 
+noun_terminals = ['alarm','reminder','appointment','meeting','schedule']
 
-verb_terminals
  
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -123,6 +123,7 @@ def preprocess(sent):
 def entityExtraction(doc):
     
     dct ={}
+    
     for x in doc.ents:
         print(x)
         if x.label_ == 'ORG':
@@ -135,6 +136,8 @@ def entityExtraction(doc):
             dct['PERSON'] =  x.text
         elif x.label_ == 'CARDINAL':
             dct['CARDINAL'] = x.text
+        elif x.label_ == 'TIME':
+            dct['TIME'] = x.text
     print('dictionary: ',dct)
     return dct
 def actionExtraction(sent):
@@ -147,6 +150,12 @@ def actionExtraction(sent):
                 tm.VB = x[0]
         if x[1] == 'NN' and tm.NN == None and tm.VB  != None:
            tm.NN = x[0]
+    # just get any verb or noun that comes first in terminal set
+    if tm.NN == None and tm.VB== None:
+        if  x[1] =='VB' and x[0] in verb_terminals:
+            tm.VB = x[0]
+        if  x[1] =='NN' and x[0] in noun_terminals:
+            tm.NN= x[0]
     return(tm)
 
 #def exportReminder(lst):
@@ -155,73 +164,21 @@ def testingResp():
     action = ('remind', 'appointment')
     dct = {}
     dct['CARDINAL'] ='5'
-   # Response(action,dct)
-    
-        
-def Response2(ST, dct):
-    
-    if ST.NN in noun_terminals_alarm:
-        engine.say('Okay I will set a alarm for you')
-        engine.runAndWait()
-        if 'DATE' in dct:
-             s = 'for ' + dct['DATE']
-             engine.say(s)
-             engine.runAndWait()
-             if 'CARDINAL' in dct:
-                s ='at' + dct['CARDINAL']
-                engine.say(s)
-                engine.runAndWait()
-                #engine.runAndWait()
-        elif 'CARDINAL' in dct:
-                s = 'for' + dct['CARDINAL']
-                engine.say(s)
-                engine.runAndWait()
-                #engine.runAndWait()
-     #  in verb reminder and not in verb schedule or  (noun in noun reminder )      
-    else:
-        if (ST.NN in noun_terminals_reminder 
-          or (ST.VB in verb_terminals_reminder and 
-              ST.VB not in verb_terminals_schedule)):
-            s = 'Okay I will set a reminder for'
-            engine.say(s)
-            engine.runAndWait()
-            if ST.NN in noun_terminals_schedule:
-                s = ST.NN
-                engine.say(s)
-                engine.runAndWait()
-        elif (ST.NN in noun_terminals_schedule 
-          or (ST.VB in verb_terminals_schedule and 
-              ST.VB not in verb_terminals_reminder)):
-             s = 'Okay I will set a appointment '
-             engine.say(s)
-             engine.runAndWait()
-    
-        if 'DATE' in dct:
-            s = 'for ' + dct['DATE']
-            engine.say(s)
-            engine.runAndWait()
-        if 'CARDINAL' in dct:
-            s = 'at ' + dct['CARDINAL']
-            engine.say(s)
-            engine.runAndWait()
-        if 'PERSON' in dct:
-            s = 'with ' + dct['PERSON']
-            engine.say(s)
-            engine.runAndWait()
-        if 'GPE' in dct:
-            s = 'at ' + dct['GPE']
-            engine.say(s)
-            engine.runAndWait()
+   # Response(action,dct)     
 
 def save_to_file(ST, dct):
    
     if ST.NN in noun_terminals_alarm:
+        engine.runAndWait()
+        engine.say("okay I have set an alarm for you")
         f = open("alarm", "a")
         f.write('Alarm:' + '\n')
         if 'CARDINAL' in dct:
             f.write('CARDINAL: ' +  dct['CARDINAL']+ "\n")
         if 'DATE' in dct:
             f.write('DATE: ' + dct['DATE']+ "\n") 
+        if 'TIME' in dct:
+            f.write('TIME: ' + dct['TIME']+ "\n") 
         f.write("\n")
         f.close()
      # Identify reminder by verbs 
@@ -232,6 +189,9 @@ def save_to_file(ST, dct):
     elif(ST.NN in noun_terminals_reminder 
           or (ST.VB in verb_terminals_reminder and 
               ST.VB not in verb_terminals_schedule)):
+          print('okay I will make that reminder for you')
+          engine.runAndWait()
+          engine.say("okay I will make that reminder for you")
           f = open("remind", "a")
           f.write('Reminder:'+ "\n")
           if 'CARDINAL' in dct:
@@ -244,6 +204,8 @@ def save_to_file(ST, dct):
             f.write('ORG: ' + dct['ORG'] + "\n")
           if 'GPE' in dct:
             f.write('GPE: '+ dct['GPE'] + "\n")
+          if 'TIME' in dct:
+            f.write('TIME: ' + dct['TIME']+ "\n") 
           f.write("\n")
           f.close() 
         # time, date , who | org, 
@@ -251,6 +213,8 @@ def save_to_file(ST, dct):
           or (ST.VB in verb_terminals_schedule and 
               ST.VB not in verb_terminals_reminder)):
           f = open("appointment", "a")
+          engine.runAndWait()
+          engine.say("okay I have addded this to your schedule")
           f.write('Appointment:'+ "\n")
           if 'CARDINAL' in dct:
               f.write('CARDINAL: ' + dct['CARDINAL']+ "\n")
@@ -262,6 +226,8 @@ def save_to_file(ST, dct):
             f.write('ORG: '+dct['ORG']+ "\n")
           if 'GPE' in dct:
             f.write('GPE: '+dct['GPE']+ "\n")
+          if 'TIME' in dct:
+            f.write('TIME: ' + dct['TIME']+ "\n") 
           f.write("\n")
           f.close() 
        
@@ -273,7 +239,8 @@ def main():
  #engine.runAndWait()
  while(run):
     with sr.Microphone() as source:
-        engine.say('Go ahead Im listning ')
+        engine.say('Go ahead I am listning ')
+        engine.runAndWait()
         print("say anything")
         audio = r.listen(source)
         try:
@@ -319,7 +286,8 @@ engine.stop()
 if __name__ == '__main__' :
   main()
 #testingResp()
-#engine.runAndWait()
+engine.runAndWait()
+engine.say("hello")
 #resp=''
 
 

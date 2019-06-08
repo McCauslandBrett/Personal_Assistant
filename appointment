@@ -1,0 +1,18 @@
+Appointment:
+CARDINAL: 5
+DATE: tomorrow
+
+Appointment:
+CARDINAL: 5
+DATE: tomorrow
+
+Appointment:
+CARDINAL: 12
+DATE: tomorrow
+PERSON: John
+
+Appointment:
+CARDINAL: 5
+DATE: tomorrow
+PERSON: John
+
