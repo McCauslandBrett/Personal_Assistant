@@ -19,6 +19,8 @@ Resources: https://youtu.be/K_WbsFrPUCk
            
 @author: Tarique & Brett
 """
+
+
 # Dependicies
 import speech_recognition as sr
 import nltk 
@@ -32,9 +34,35 @@ from nltk.chunk import conlltags2tree, tree2conlltags
 from nltk.tokenize import word_tokenize
 from nltk.tag import pos_tag
 from nltk.chunk import ne_chunk
+
+from enum import Enum
+class POS(Enum):
+    NN = 1
+    VB = 0
+
+# ---action tuple---
+# verb =0
+# noun =1
+
 alarmcnt = 0
 # Globels
+verb_terminals_alarm = ['set','make']
+noun_terminals_alarm = ['alarm']
 
+verb_terminals_reminder = ['remind','make','set']
+noun_terminals_reminder = ['reminder']
+#  in verb reminder and not in verb schedule or  noun in noun reminder
+
+verb_terminals_schedule = ['make','set','schedule']
+noun_terminals_schedule = ['appointment','meeting','schedule']
+
+#  in verb schedule and not in verb reminder or  noun in noun schedule
+
+
+verb_terminals = ['set','make','remind','schedule'] 
+
+verb_terminals
+ 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[1].id)
@@ -113,10 +141,8 @@ def actionExtraction(sent):
     verb = None
     Noun = None
     for x in sent:
-        if  x[1] =='VB'  and verb == None:
-            if x[0]== 'set' or x[0]== 'remind':
-                verb = x[0]
-            if x[0]== 'make':
+        if  x[1] =='VB'  and verb == None: # havent already selected a verb
+            if x[0] in verb_terminals: 
                 verb = x[0]
         if x[1] == 'NN' and Noun == None and verb != None:
             Noun = x[0]
@@ -130,111 +156,49 @@ def testingResp():
     dct['CARDINAL'] ='5'
     Response(action,dct)
     
-
-def Response(action, dct):
-    
-    respe= 'say this'
-    engine.say('testing testing')
-    engine.say(respe)
-    resp=''
-    if action[1] == 'alarm':
-        resp = 'Okay I will set a alarm for you'
-        if 'DATE' in dct:
-            resp += ' for ' + dct['DATE']
-            if 'CARDINAL' in dct:
-                resp += 'at' + dct['CARDINAL']
-        elif 'CARDINAL' in dct:
-                resp += 'for' + dct['CARDINAL']
-                
-            
-    elif action[1] == 'remind' or action[1] == 'set'or action[1] == 'make':
-        first = False
-        if action[1] == 'set':
-            resp = 'Okay I will set a '
-            if action[0] != None:
-                resp += action[0]
-            first = True
-        else:
-             resp = 'Okay I will set a reminder '
-        if action[0] != None:
-            resp += 'for ' + action[0]
-            first = True
-        if 'DATE' in dct:
-            if first:
-                resp += 'for ' + dct['DATE']
-            else:
-                resp += 'at ' + dct['DATE']
-        if 'CARDINAL' in dct:
-            resp += 'at ' + dct['CARDINAL']
-        if 'PERSON' in dct:
-            resp += 'with ' + dct['PERSON']
-        if 'GPE' in dct:
-            resp += 'at ' + dct['GPE']
-        print('speak')
-    #engine.runAndWait()
-    engine.say(resp)
-    #engine.stop()
         
 def Response2(action, dct):
     
-    #respe= 'say this'
-    
-    #engine.say('testing testing')
-    #engine.runAndWait()
-    #engine.runAndWait()
-    #engine.say(respe)
-    resp=''
-    if action[1] == 'alarm':
+    if action[POS.NN] in noun_terminals_alarm:
         engine.say('Okay I will set a alarm for you')
         engine.runAndWait()
         if 'DATE' in dct:
              s = 'for ' + dct['DATE']
              engine.say(s)
              engine.runAndWait()
-             
-             #engine.runAndWait()
-            
              if 'CARDINAL' in dct:
                 s ='at' + dct['CARDINAL']
                 engine.say(s)
                 engine.runAndWait()
                 #engine.runAndWait()
-                
         elif 'CARDINAL' in dct:
                 s = 'for' + dct['CARDINAL']
                 engine.say(s)
                 engine.runAndWait()
                 #engine.runAndWait()
-            
-    elif action[1] == 'remind' or action[1] == 'set'or action[1] == 'make':
-        first = False
-        if action[1] == 'set':
-            s = 'Okay I will set a '
+     #  in verb reminder and not in verb schedule or  (noun in noun reminder )      
+    else:
+        if (action[POS.NN] in noun_terminals_reminder 
+          or (action[POS.VB] in verb_terminals_reminder and 
+              action[POS.VB] not in verb_terminals_schedule)):
+            s = 'Okay I will set a reminder for'
             engine.say(s)
             engine.runAndWait()
-            if action[0] =='appointment':
-                s = action[0]
+            if action[POS.NN] in noun_terminals_schedule:
+                s = action[POS.NN]
                 engine.say(s)
                 engine.runAndWait()
-            first = True
-        else:
-             s = 'Okay I will set a reminder '
+        elif (action[POS.NN] in noun_terminals_schedule 
+          or (action[POS.VB] in verb_terminals_schedule and 
+              action[POS.VB] not in verb_terminals_reminder)):
+             s = 'Okay I will set a appointment '
              engine.say(s)
              engine.runAndWait()
-        if action[0] != None:
-            s = 'for ' + action[0]
+    
+        if 'DATE' in dct:
+            s = 'for ' + dct['DATE']
             engine.say(s)
             engine.runAndWait()
-            first = True
-        if 'DATE' in dct:
-            if first:
-                s = 'for ' + dct['DATE']
-                engine.say(s)
-                engine.runAndWait()
-            else:
-                s = 'at ' + dct['DATE']
-                engine.say(s)
-                engine.runAndWait()
         if 'CARDINAL' in dct:
             s = 'at ' + dct['CARDINAL']
             engine.say(s)
@@ -249,8 +213,8 @@ def Response2(action, dct):
             engine.runAndWait()
 
 def save_to_file(action, dct):
-  
-    if action[1] == 'alarm':
+   
+    if action[POS.NN] in noun_terminals_alarm:
         f = open("alarm", "a")
         f.write('Alarm:' + '\n')
         if 'CARDINAL' in dct:
@@ -259,8 +223,14 @@ def save_to_file(action, dct):
             f.write('DATE: ' + dct['DATE']+ "\n") 
         f.write("\n")
         f.close()
-    # time, date , who | org, 
-    elif action[0]=='remind':
+     # Identify reminder by verbs 
+     #  remind me to 
+     # OR Identify reminder by NN 
+     #  set a reminder
+     
+    elif(action[POS.NN] in noun_terminals_reminder 
+          or (action[POS.VB] in verb_terminals_reminder and 
+              action[POS.VB] not in verb_terminals_schedule)):
           f = open("remind", "a")
           f.write('Reminder:'+ "\n")
           f.write('CARDINAL: ')
@@ -277,7 +247,10 @@ def save_to_file(action, dct):
           f.write("\n")
           f.close() 
         # time, date , who | org, 
-    elif action[1]=='appointment':
+    elif (action[POS.NN] in noun_terminals_schedule 
+          or (action[POS.VB] in verb_terminals_schedule and 
+              action[POS.VB] not in verb_terminals_reminder)):
+          print('hello from appointment scheduler')
           f = open("appointment", "a")
           f.write('Appointment:'+ "\n")
           if 'CARDINAL' in dct:
