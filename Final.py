@@ -36,9 +36,10 @@ from nltk.tag import pos_tag
 from nltk.chunk import ne_chunk
 
 from enum import Enum
-class POS(Enum):
-    NN = 1
-    VB = 0
+
+class Grm():
+    NN = None
+    VB = None
 
 # ---action tuple---
 # verb =0
@@ -137,16 +138,16 @@ def entityExtraction(doc):
 def actionExtraction(sent):
     
     #VB NN 
-  
+    tm = Grm()
     verb = None
     Noun = None
     for x in sent:
         if  x[1] =='VB'  and verb == None: # havent already selected a verb
             if x[0] in verb_terminals: 
-                verb = x[0]
+                tm.VB = x[0]
         if x[1] == 'NN' and Noun == None and verb != None:
-            Noun = x[0]
-    return(verb,Noun)
+           tm.NN = x[0]
+    return(tm)
 
 #def exportReminder(lst):
    
@@ -154,12 +155,12 @@ def testingResp():
     action = ('remind', 'appointment')
     dct = {}
     dct['CARDINAL'] ='5'
-    Response(action,dct)
+   # Response(action,dct)
     
         
-def Response2(action, dct):
+def Response2(ST, dct):
     
-    if action[POS.NN] in noun_terminals_alarm:
+    if ST.NN in noun_terminals_alarm:
         engine.say('Okay I will set a alarm for you')
         engine.runAndWait()
         if 'DATE' in dct:
@@ -178,19 +179,19 @@ def Response2(action, dct):
                 #engine.runAndWait()
      #  in verb reminder and not in verb schedule or  (noun in noun reminder )      
     else:
-        if (action[POS.NN] in noun_terminals_reminder 
-          or (action[POS.VB] in verb_terminals_reminder and 
-              action[POS.VB] not in verb_terminals_schedule)):
+        if (ST.NN in noun_terminals_reminder 
+          or (ST.VB in verb_terminals_reminder and 
+              ST.VB not in verb_terminals_schedule)):
             s = 'Okay I will set a reminder for'
             engine.say(s)
             engine.runAndWait()
-            if action[POS.NN] in noun_terminals_schedule:
-                s = action[POS.NN]
+            if ST.NN in noun_terminals_schedule:
+                s = ST.NN
                 engine.say(s)
                 engine.runAndWait()
-        elif (action[POS.NN] in noun_terminals_schedule 
-          or (action[POS.VB] in verb_terminals_schedule and 
-              action[POS.VB] not in verb_terminals_reminder)):
+        elif (ST.NN in noun_terminals_schedule 
+          or (ST.VB in verb_terminals_schedule and 
+              ST.VB not in verb_terminals_reminder)):
              s = 'Okay I will set a appointment '
              engine.say(s)
              engine.runAndWait()
@@ -212,9 +213,9 @@ def Response2(action, dct):
             engine.say(s)
             engine.runAndWait()
 
-def save_to_file(action, dct):
+def save_to_file(ST, dct):
    
-    if action[POS.NN] in noun_terminals_alarm:
+    if ST.NN in noun_terminals_alarm:
         f = open("alarm", "a")
         f.write('Alarm:' + '\n')
         if 'CARDINAL' in dct:
@@ -228,9 +229,9 @@ def save_to_file(action, dct):
      # OR Identify reminder by NN 
      #  set a reminder
      
-    elif(action[POS.NN] in noun_terminals_reminder 
-          or (action[POS.VB] in verb_terminals_reminder and 
-              action[POS.VB] not in verb_terminals_schedule)):
+    elif(ST.NN in noun_terminals_reminder 
+          or (ST.VB in verb_terminals_reminder and 
+              ST.VB not in verb_terminals_schedule)):
           f = open("remind", "a")
           f.write('Reminder:'+ "\n")
           f.write('CARDINAL: ')
@@ -247,9 +248,9 @@ def save_to_file(action, dct):
           f.write("\n")
           f.close() 
         # time, date , who | org, 
-    elif (action[POS.NN] in noun_terminals_schedule 
-          or (action[POS.VB] in verb_terminals_schedule and 
-              action[POS.VB] not in verb_terminals_reminder)):
+    elif (ST.NN in noun_terminals_schedule 
+          or (ST.VB in verb_terminals_schedule and 
+              ST.VB not in verb_terminals_reminder)):
           print('hello from appointment scheduler')
           f = open("appointment", "a")
           f.write('Appointment:'+ "\n")
@@ -296,13 +297,13 @@ def main():
         print('sent', sent)
         result = NPChunker.parse(sent)
         print('result',result)
-        action = actionExtraction(sent)
-        print('actionExtraction: ',action)
+        ST = actionExtraction(sent)
+        #print('actionExtraction: ',ST)
         doc = nlp(text)
         pprint([(X.text, X.label_) for X in doc.ents])
         dct = entityExtraction(doc)
-        #Response2(action, dct)
-        save_to_file(action, dct)
+        #Response2(ST, dct)
+        save_to_file(ST, dct)
         dct.clear()
         text = ''
     run = False
