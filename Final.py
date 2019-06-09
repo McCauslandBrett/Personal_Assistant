@@ -37,8 +37,12 @@ from nltk.chunk import ne_chunk
 
 from enum import Enum
 
+import os
+from twilio.rest import Client
+
 class Grm():
     NN = None
+    NNP = None
     VB = None
 
 # ---action tuple---
@@ -46,7 +50,14 @@ class Grm():
 # noun =1
 
 alarmcnt = 0
-# Globels
+phone_book= {}
+phone_book['Tariq'] = '9498807364'
+
+# Globals
+
+verb_terminals_sms = ['call', 'text', 'message', 'make', 'send']
+noun_terminals_sms = ['call', 'text', 'message']
+
 verb_terminals_alarm = ['set','make']
 noun_terminals_alarm = ['alarm']
 
@@ -59,9 +70,8 @@ noun_terminals_schedule = ['appointment','meeting','schedule']
 
 #  in verb schedule and not in verb reminder or  noun in noun schedule
 
-
-verb_terminals = ['set','make','remind','schedule'] 
-noun_terminals = ['alarm','reminder','appointment','meeting','schedule']
+verb_terminals = ['set','make','remind','schedule', 'call', 'text', 'message']
+noun_terminals = ['alarm','reminder','appointment','meeting','schedule', 'text', 'call', 'message']
 
  
 engine = pyttsx3.init()
@@ -92,6 +102,71 @@ nlp = spacy.load("en_core_web_sm")
 #nltk.download('words')
 
 
+def sendSMS(call_reciever = None):
+    call_reciever = call_reciever
+    sms_text = ""
+    if not (call_reciever in phone_book): # if we dont know who we are calling
+        if call_reciever == None: #get person's name to call
+            temp_name = ""
+            temp_number = ""
+            with sr.Microphone() as source:
+                while True:
+                    engine.say("who do you want to call?")
+                    engine.runAndWait()
+                    print("Who do you want to call?")
+                    audio = r.listen(source)
+                    try:
+                        temp_name = r.recognize_google(audio)
+                        print(temp_name)
+                        break
+                    except:
+                        print('Sorry I didnt Catch that')
+                        engine.say('Sorry I didnt catch that')
+            call_reciever =  temp_name
+
+        with sr.Microphone() as source: # get person's number to call
+            while True:
+                engine.say("What is their number?")
+                engine.runAndWait()
+                print("What is their number?")
+                audio = r.listen(source)
+                try:
+                    temp_number = r.recognize_google(audio)
+                    print(temp_number)
+                    break
+                except:
+                    print('Sorry I didnt Catch that')
+                    engine.say('Sorry I didnt catch that')
+
+        phone_book[call_reciever] = temp_number.replace("-","") #put person and their number in phonebook. TODO: Assuming number is US area code
+
+    with sr.Microphone() as source:
+        while True:
+            engine.say("What do you want to say to " + call_reciever)
+            engine.runAndWait()
+            print("What do you want to say to " + call_reciever)
+            audio = r.listen(source)
+            try:
+                sms_text = r.recognize_google(audio)
+                print(sms_text)
+                break
+            except:
+                print('Sorry I didnt Catch that')
+                engine.say('Sorry I didnt catch that')
+
+    #using Twilio api to actually make a call
+    account_sid = 'AC1638427d68b93fd34df43a6d48cc582e'
+    auth_token = '8e747f33010216272f418c3931786267'
+    client = Client(account_sid, auth_token)
+    print("phone_book", phone_book, "\n")
+    outgoing_number = phone_book[call_reciever]
+
+    message = client.messages \
+        .create(
+        body=sms_text,
+        from_='+19728939499',
+        to=outgoing_number
+    )
 
 
 def testing():
@@ -140,22 +215,37 @@ def entityExtraction(doc):
             dct['TIME'] = x.text
     print('dictionary: ',dct)
     return dct
+
 def actionExtraction(sent):
     
     #VB NN 
     tm = Grm()
+
     for x in sent:
         if  x[1] =='VB'  and tm.VB == None: # havent already selected a verb
             if x[0] in verb_terminals: 
                 tm.VB = x[0]
         if x[1] == 'NN' and tm.NN == None and tm.VB  != None:
            tm.NN = x[0]
+        if x[1] == 'NN' and tm.NN == None and tm.VB == None and x[0] in verb_terminals:
+            tm.VB = x[0]
+            for x in sent:
+                if x[0] != tm.VB and x[1] == 'NNP':
+                    tm.NNP = x[0]
+            if tm.NNP == None:
+                for x in sent:
+                    if x[0] != tm.VB and x[1] == 'NN':
+                        tm.NNP = x[0]
+
     # just get any verb or noun that comes first in terminal set
     if tm.NN == None and tm.VB== None:
         if  x[1] =='VB' and x[0] in verb_terminals:
             tm.VB = x[0]
         if  x[1] =='NN' and x[0] in noun_terminals:
             tm.NN= x[0]
+    #grab calls
+
+
     return(tm)
 
 #def exportReminder(lst):
@@ -166,9 +256,15 @@ def testingResp():
     dct['CARDINAL'] ='5'
    # Response(action,dct)     
 
-def save_to_file(ST, dct):
-   
-    if ST.NN in noun_terminals_alarm:
+def task_execution(ST, dct):
+    if ST.VB in verb_terminals_sms or (ST.NN in noun_terminals_sms and ST.VB in verb_terminals_sms):
+        person_name = None
+        person_name =dct.get('PERSON')
+        if person_name == None:
+            person_name = ST.NNP
+            print("person name is passes as the NNP")
+        sendSMS(person_name)
+    elif ST.NN in noun_terminals_alarm:
         engine.runAndWait()
         engine.say("okay I have set an alarm for you")
         f = open("alarm", "a")
@@ -265,12 +361,13 @@ def main():
         ST = actionExtraction(sent)
         print('VB: ', ST.VB)
         print('NN: ', ST.NN)
+        print('NNP ', ST.NNP)
         #print('actionExtraction: ',ST)
         doc = nlp(text)
         pprint([(X.text, X.label_) for X in doc.ents])
         dct = entityExtraction(doc)
         #Response2(ST, dct)
-        save_to_file(ST, dct)
+        task_execution(ST, dct)
         dct.clear()
         text = ''
     run = False

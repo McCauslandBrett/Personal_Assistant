@@ -16,3 +16,11 @@ CARDINAL: 5
 DATE: tomorrow
 PERSON: John
 
+Appointment:
+DATE: tomorrow
+ORG: Starbucks
+
+Appointment:
+DATE: tomorrow
+PERSON: Brett
+
