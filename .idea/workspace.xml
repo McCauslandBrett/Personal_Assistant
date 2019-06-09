@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fa2a7785-d6a4-4417-a83c-36d08965e996" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Final.py" beforeDir="false" afterPath="$PROJECT_DIR$/Final.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/alarm" beforeDir="false" afterPath="$PROJECT_DIR$/alarm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appointment" beforeDir="false" afterPath="$PROJECT_DIR$/appointment" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/remind" beforeDir="false" afterPath="$PROJECT_DIR$/remind" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SMSTesting.py" beforeDir="false" afterPath="$PROJECT_DIR$/SMSTesting.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,11 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SMSTesting.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret selection-end-line="1" selection-end-column="30" />
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="36">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
             </state>
           </provider>
         </entry>
@@ -68,8 +62,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Final.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="154" column="54" selection-start-line="154" selection-start-column="54" selection-end-line="154" selection-end-column="54" />
+            <state relative-caret-position="1044">
+              <caret line="333" column="88" selection-start-line="333" selection-start-column="88" selection-end-line="333" selection-end-column="88" />
             </state>
           </provider>
         </entry>
@@ -264,6 +258,16 @@
     <entry file="file://$PROJECT_DIR$/alarm">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/appointment">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SMSTesting.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="36">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/GrammarTesting.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="141">
@@ -271,23 +275,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/appointment">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SMSTesting.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-line="1" selection-end-column="30" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Final.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="154" column="54" selection-start-line="154" selection-start-column="54" selection-end-line="154" selection-end-column="54" />
+        <state relative-caret-position="1044">
+          <caret line="333" column="88" selection-start-line="333" selection-start-column="88" selection-end-line="333" selection-end-column="88" />
         </state>
       </provider>
     </entry>

@@ -40,7 +40,10 @@ from enum import Enum
 import os
 from twilio.rest import Client
 
+import webbrowser
+
 class Grm():
+    sentence = None
     NN = None
     NNP = None
     VB = None
@@ -50,7 +53,7 @@ class Grm():
 # noun =1
 
 alarmcnt = 0
-phone_book= {}
+phone_book= {} #TODO: have a file for a phonebook that we use to have a permanent phonebook that stores new numbers as they come in
 phone_book['Tariq'] = '9498807364'
 
 # Globals
@@ -325,7 +328,10 @@ def task_execution(ST, dct):
           if 'TIME' in dct:
             f.write('TIME: ' + dct['TIME']+ "\n") 
           f.write("\n")
-          f.close() 
+          f.close()
+    else:
+        print("don't know what task to execute, querying google for search")
+        webbrowser.open_new_tab('http://www.google.com/search?btnG=1&q=%s' % ST.sentence)
        
 # --- Main ---
 def main():
@@ -334,6 +340,7 @@ def main():
  text=""
  #engine.runAndWait()
  while(run):
+    text = None
     with sr.Microphone() as source:
         engine.say('Go ahead I am listning ')
         engine.runAndWait()
@@ -359,6 +366,7 @@ def main():
         result = NPChunker.parse(sent)
         print('result',result)
         ST = actionExtraction(sent)
+        ST.sentence = text
         print('VB: ', ST.VB)
         print('NN: ', ST.NN)
         print('NNP ', ST.NNP)
