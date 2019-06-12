@@ -331,7 +331,7 @@ def task_execution(ST, dct):
           f.close()
     else:
         print("don't know what task to execute, querying google for search")
-        webbrowser.open_new_tab('http://www.google.com/search?btnG=1&q=%s' % ST.sentence)
+        webbrowser.open_new_tab('http://www.google.com/search?btnG=1&q=%s' % ST.sentence.replace("Google", ""))
        
 # --- Main ---
 def main():
