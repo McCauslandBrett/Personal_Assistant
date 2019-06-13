@@ -24,7 +24,9 @@
       </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/remind">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1437" />
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -62,8 +64,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Final.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="292">
-              <caret line="333" column="99" selection-start-line="333" selection-start-column="99" selection-end-line="333" selection-end-column="99" />
+            <state relative-caret-position="432">
+              <caret line="60" column="47" selection-start-line="60" selection-start-column="47" selection-end-line="60" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -208,18 +210,18 @@
     <frame x="0" y="32" width="3840" height="2128" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.19365919" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.19365919" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32980502" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4356546" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.4356546" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32980502" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.44277778" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.44345403" />
       <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
       <window_info anchor="bottom" id="Python Console" order="10" weight="0.32980502" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -244,9 +246,6 @@
           <caret line="49" column="28" selection-start-line="49" selection-start-column="28" selection-end-line="49" selection-end-column="28" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/remind">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/appointment">
       <provider selected="true" editor-type-id="text-editor" />
@@ -275,10 +274,15 @@
     <entry file="file://$PROJECT_DIR$/alarm">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$PROJECT_DIR$/remind">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1437" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Final.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="333" column="99" selection-start-line="333" selection-start-column="99" selection-end-line="333" selection-end-column="99" />
+        <state relative-caret-position="432">
+          <caret line="60" column="47" selection-start-line="60" selection-start-column="47" selection-end-line="60" selection-end-column="47" />
         </state>
       </provider>
     </entry>

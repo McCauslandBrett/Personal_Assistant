@@ -58,7 +58,7 @@ phone_book['Tariq'] = '9498807364'
 
 # Globals
 
-verb_terminals_sms = ['call', 'text', 'message', 'make', 'send']
+verb_terminals_sms = ['call', 'text', 'message', 'send']
 noun_terminals_sms = ['call', 'text', 'message']
 
 verb_terminals_alarm = ['set','make']
