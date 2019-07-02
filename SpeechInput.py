@@ -22,10 +22,10 @@ r.energy_threshold = 4000
 text=""
 with sr.Microphone() as source:
     #audio_activate = r.listen_in_background(source)
-    
+
     print('speak Anything: ')
     audio = r.listen(source)
-    
+
     #audio = r.listen_in_background(source)
     try:
         text = r.recognize_google(audio)
@@ -36,3 +36,17 @@ words = nltk.word_tokenize(text)
 tagged = nltk.pos_tag(words)
 namedEnt = nltk.ne_chunk(tagged)
 namedEnt.draw()
+
+
+
+def make_appointment():
+    return 0
+file = open("reminders.txt", "w")
+
+file.write("Reminder:\n")
+file.write("Date:\t" + "\n")
+file.write("Time:\t" + "\n")
+file.write("Location:\t" + "\n")
+file.write("With:\t" + "\n")
+file.write("\n")
+file.close()

@@ -62,14 +62,44 @@ def Reminder(named_ents,_return):
 r = sr.Recognizer()
 
 r.energy_threshold = 4000
-text="remind me to take my medicine at 12"
+text="pick up Asprin from CSV Pharmacy on Tuesday May 12th"
 
 words = nltk.word_tokenize(text)
 tagged = nltk.pos_tag(words)
 namedEnt = nltk.ne_chunk(tagged)
+<<<<<<< HEAD
 Reminder(namedEnt)
 
 
+=======
+namedEnt.draw()
+
+""" Making your own grammar """
+
+groucho_grammar = nltk.CFG.fromstring("""
+... S -> NP VP
+... PP -> P NP
+... NP -> Det N | Det N PP | 'I'
+... VP -> V NP | VP PP
+... Det -> 'an' | 'my'
+... N -> 'elephant' | 'pajamas'
+... V -> 'shot'
+... P -> 'in'
+... """)
+ 
+ 
+ 
+#sent = ['I', 'shot', 'an', 'elephant', 'in', 'my', 'pajamas']
+try:
+    parser = nltk.ChartParser(groucho_grammar)
+    for tree in parser.parse(sent):
+        print(tree)
+except:
+    print("not in my defined capabilities")
+ 
+ 
+ 
+>>>>>>> b2
  
  
  
