@@ -24,20 +24,13 @@ Resources: https://youtu.be/K_WbsFrPUCk
 # Dependicies
 import speech_recognition as sr
 import nltk 
-import random
+
 import datetime
 import pyttsx3
 import spacy
 
 from pprint import pprint
-from nltk.chunk import conlltags2tree, tree2conlltags
-from nltk.tokenize import word_tokenize
-from nltk.tag import pos_tag
-from nltk.chunk import ne_chunk
 
-from enum import Enum
-
-import os
 from twilio.rest import Client
 
 import webbrowser
@@ -48,9 +41,6 @@ class Grm():
     NNP = None
     VB = None
 
-# ---action tuple---
-# verb =0
-# noun =1
 
 alarmcnt = 0
 phone_book= {} #TODO: have a file for a phonebook that we use to have a permanent phonebook that stores new numbers as they come in
@@ -91,10 +81,6 @@ r = sr.Recognizer()
 r.energy_threshold = 1000
 cp = nltk.RegexpParser(pattern)
 NPChunker = nltk.RegexpParser(pattern)
-
-            #result.draw()
-
-
 
 
 #Downloads
@@ -221,7 +207,6 @@ def entityExtraction(doc):
 
 def grammar(sent):
     
-    #VB NN 
     tm = Grm()
 
     for x in sent:
@@ -240,7 +225,7 @@ def grammar(sent):
                     if x[0] != tm.VB and x[1] == 'NN':
                         tm.NNP = x[0]
 
-    # just get any verb or noun that comes first in terminal set
+    
     if tm.NN == None and tm.VB== None:
         if  x[1] =='VB' and x[0] in verb_terminals:
             tm.VB = x[0]
@@ -387,7 +372,7 @@ if __name__ == '__main__' :
 #testingResp()
 engine.runAndWait()
 engine.say("hello")
-#resp=''
+
 
 
 
