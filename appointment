@@ -1,26 +1,10 @@
 Appointment:
-CARDINAL: 5
-DATE: tomorrow
+CARDINAL: 3
+DATE: Thursday
+
 
 Appointment:
-CARDINAL: 5
-DATE: tomorrow
-
-Appointment:
-CARDINAL: 12
-DATE: tomorrow
-PERSON: John
-
-Appointment:
-CARDINAL: 5
-DATE: tomorrow
-PERSON: John
-
-Appointment:
-DATE: tomorrow
-ORG: Starbucks
-
-Appointment:
-DATE: tomorrow
-PERSON: Brett
+DATE: Wednesday
+PERSON: Chang
+ORG: Blue Cross
 

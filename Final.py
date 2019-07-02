@@ -58,7 +58,7 @@ phone_book['Tariq'] = '9498807364'
 
 # Globals
 
-verb_terminals_sms = ['call', 'text', 'message', 'make', 'send']
+verb_terminals_sms = ['call', 'text', 'message', 'send']
 noun_terminals_sms = ['call', 'text', 'message']
 
 verb_terminals_alarm = ['set','make']
@@ -88,7 +88,7 @@ now = datetime.datetime.now()
 
 pattern = 'NP: {<DT>?<JJ>*<NN>}'
 r = sr.Recognizer()
-r.energy_threshold = 4000
+r.energy_threshold = 1000
 cp = nltk.RegexpParser(pattern)
 NPChunker = nltk.RegexpParser(pattern)
 
@@ -219,13 +219,13 @@ def entityExtraction(doc):
     print('dictionary: ',dct)
     return dct
 
-def actionExtraction(sent):
+def grammar(sent):
     
     #VB NN 
     tm = Grm()
 
     for x in sent:
-        if  x[1] =='VB'  and tm.VB == None: # havent already selected a verb
+        if  x[1] =='VB'  and tm.VB == None: # selected verb
             if x[0] in verb_terminals: 
                 tm.VB = x[0]
         if x[1] == 'NN' and tm.NN == None and tm.VB  != None:
@@ -246,18 +246,12 @@ def actionExtraction(sent):
             tm.VB = x[0]
         if  x[1] =='NN' and x[0] in noun_terminals:
             tm.NN= x[0]
-    #grab calls
-
+  
 
     return(tm)
 
-#def exportReminder(lst):
-   
-def testingResp():
-    action = ('remind', 'appointment')
-    dct = {}
-    dct['CARDINAL'] ='5'
-   # Response(action,dct)     
+
+
 
 def task_execution(ST, dct):
     if ST.VB in verb_terminals_sms or (ST.NN in noun_terminals_sms and ST.VB in verb_terminals_sms):
@@ -365,7 +359,7 @@ def main():
         print('sent', sent)
         result = NPChunker.parse(sent)
         print('result',result)
-        ST = actionExtraction(sent)
+        ST = grammar(sent)
         ST.sentence = text
         print('VB: ', ST.VB)
         print('NN: ', ST.NN)
